@@ -6,7 +6,7 @@ This app helps users track income, expenses, and view monthly financial summarie
 
 ---
 ##  Screenshots  
-<img src="https://github.com/NishantK04/FinanceManager/blob/master/splash.png" width="150"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/homelight.png" width="150"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/addTD1.png" width="150"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/addInLight2.png" width="150"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/categoriesLight.png" width="150"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/categoriesLight2.png" width="150"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/summaryLight.png" width="150">
+<img src="https://github.com/NishantK04/FinanceManager/blob/master/splash.png" width="200"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/homelight.png" width="200"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/addTD1.png" width="200"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/addInLight2.png" width="200"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/categoriesLight.png" width="200"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/categoriesLight2.png" width="200"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/summaryLight.png" width="200">
 
 ---
 ##  Project Structure
