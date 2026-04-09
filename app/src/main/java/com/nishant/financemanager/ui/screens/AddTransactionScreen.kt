@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
@@ -19,12 +20,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nishant.financemanager.R
 import com.nishant.financemanager.viewmodel.FinanceViewModel
 import com.nishant.financemanager.data.Transaction
 import com.nishant.financemanager.data.TransactionType
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +44,11 @@ fun AddTransactionScreen(
     var selectedCategory by remember { mutableStateOf("Salary") }
     var selectedDate by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        selectedDate = sdf.format(Date())
+    }
 
     val categories: List<Pair<String, Int>> = if (isIncome) {
         listOf(
@@ -60,10 +70,10 @@ fun AddTransactionScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF6F7FB))
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
-        // Header
+        // HEADER (FIXED)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,9 +91,7 @@ fun AddTransactionScreen(
 
             Column {
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
 
                     Icon(
                         Icons.Default.ArrowBack,
@@ -131,39 +139,49 @@ fun AddTransactionScreen(
             }
         }
 
+        // ONLY THIS PART SCROLLS
         LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier
+                .weight(1f)
+                .imePadding(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp,
+                bottom = 120.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
 
             item {
 
-                Text(
-                    "Amount",
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text("Amount", fontWeight = FontWeight.SemiBold)
 
                 OutlinedTextField(
                     value = amount,
-                    onValueChange = { amount = it },
+                    onValueChange = {
+                        if (it.matches(Regex("^\\d*\\.?\\d*$"))) {
+                            amount = it
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text("₹ 0.00") },
                     shape = RoundedCornerShape(18.dp),
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal
+                    )
                 )
             }
 
             item {
 
-                Text(
-                    "Category",
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text("Category", fontWeight = FontWeight.SemiBold)
 
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    maxItemsInEachRow = 4
                 ) {
                     categories.forEach { (category, icon) ->
                         CategoryItem(
@@ -178,10 +196,7 @@ fun AddTransactionScreen(
 
             item {
 
-                Text(
-                    "Date",
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text("Date", fontWeight = FontWeight.SemiBold)
 
                 Box(
                     modifier = Modifier
@@ -197,7 +212,6 @@ fun AddTransactionScreen(
                         leadingIcon = {
                             Icon(Icons.Default.CalendarToday, null)
                         },
-                        placeholder = { Text("Select date") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(18.dp)
                     )
@@ -206,10 +220,7 @@ fun AddTransactionScreen(
 
             item {
 
-                Text(
-                    "Note",
-                    fontWeight = FontWeight.SemiBold
-                )
+                Text("Note", fontWeight = FontWeight.SemiBold)
 
                 OutlinedTextField(
                     value = note,
@@ -227,7 +238,7 @@ fun AddTransactionScreen(
                 Button(
                     onClick = {
 
-                        if (amount.isNotEmpty() && selectedDate.isNotEmpty()) {
+                        if (amount.isNotEmpty()) {
 
                             val transaction = Transaction(
                                 title = selectedCategory,
@@ -253,16 +264,12 @@ fun AddTransactionScreen(
                         containerColor = Color(0xFF0C6ACE)
                     )
                 ) {
-                    Text(
-                        "Save Transaction",
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Save Transaction", fontWeight = FontWeight.Bold)
                 }
             }
-
-            item { Spacer(modifier = Modifier.height(30.dp)) }
         }
     }
+
 
     if (showDatePicker) {
 
@@ -276,14 +283,12 @@ fun AddTransactionScreen(
 
                         datePickerState.selectedDateMillis?.let { millis ->
 
-                            val sdf = java.text.SimpleDateFormat(
+                            val sdf = SimpleDateFormat(
                                 "dd-MM-yyyy",
-                                java.util.Locale.getDefault()
+                                Locale.getDefault()
                             )
 
-                            selectedDate = sdf.format(
-                                java.util.Date(millis)
-                            )
+                            selectedDate = sdf.format(Date(millis))
                         }
 
                         showDatePicker = false
@@ -312,7 +317,10 @@ fun ToggleButton(
     Box(
         modifier = modifier
             .background(
-                if (selected) Color.White else Color.Transparent,
+                if (selected)
+                    MaterialTheme.colorScheme.surface
+                else
+                    Color.Transparent,
                 RoundedCornerShape(50)
             )
             .clickable { onClick() }
@@ -323,7 +331,11 @@ fun ToggleButton(
         Text(
             text,
             fontWeight = FontWeight.SemiBold,
-            color = if (selected) Color.Black else Color.White
+            color =
+                if (selected)
+                    MaterialTheme.colorScheme.onSurface
+                else
+                    Color.White
         )
     }
 }
@@ -347,19 +359,22 @@ fun CategoryItem(
                 if (selected)
                     Brush.verticalGradient(
                         listOf(
-                            Color(0xFF0C6ACE),
+                            Color(0xFF0E416E),
                             Color(0xFF063770)
                         )
                     )
                 else
                     Brush.verticalGradient(
-                        listOf(Color.White, Color.White)
+                        listOf(
+                            MaterialTheme.colorScheme.surface,
+                            MaterialTheme.colorScheme.surface
+                        )
                     ),
                 RoundedCornerShape(18.dp)
             )
             .clickable { onClick() }
             .padding(vertical = 12.dp)
-            .width(70.dp)
+            .width(78.dp)
     ) {
 
         Box(
@@ -369,7 +384,7 @@ fun CategoryItem(
                     if (selected)
                         Color.White.copy(.15f)
                     else
-                        Color(0xFFF1F3F6),
+                        MaterialTheme.colorScheme.background,
                     RoundedCornerShape(10.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -387,8 +402,14 @@ fun CategoryItem(
         Text(
             text,
             fontSize = 11.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.SemiBold,
-            color = if (selected) Color.White else Color.Black
+            color =
+                if (selected)
+                    Color.White
+                else
+                    MaterialTheme.colorScheme.onSurface
         )
     }
 }

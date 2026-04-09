@@ -47,4 +47,13 @@ class FinanceViewModel(
         combine(totalIncome, totalExpense) { income, expense ->
             income - expense
         }
+
+    val categoryTotals =
+        transactions.map { list ->
+            list.filter { it.type == TransactionType.EXPENSE }
+                .groupBy { it.category }
+                .mapValues { entry ->
+                    entry.value.sumOf { it.amount }
+                }
+        }
 }

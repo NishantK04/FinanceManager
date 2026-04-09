@@ -47,14 +47,14 @@ fun CategoryScreen(viewModel: FinanceViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F6FA))
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
         // HEADER
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .wrapContentHeight()
                 .background(
                     Brush.horizontalGradient(
                         listOf(

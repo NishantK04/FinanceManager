@@ -20,16 +20,19 @@ fun SwipeToDelete(
     onDelete: () -> Unit
 ) {
 
-    val dismissState = rememberSwipeToDismissBoxState()
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { value ->
 
-    if (
-        dismissState.currentValue == SwipeToDismissBoxValue.EndToStart ||
-        dismissState.currentValue == SwipeToDismissBoxValue.StartToEnd
-    ) {
-        LaunchedEffect(transaction.id) {
-            onDelete()
+            if (
+                value == SwipeToDismissBoxValue.EndToStart ||
+                value == SwipeToDismissBoxValue.StartToEnd
+            ) {
+                onDelete()
+            }
+
+            false // VERY IMPORTANT → prevents auto delete
         }
-    }
+    )
 
     SwipeToDismissBox(
         state = dismissState,

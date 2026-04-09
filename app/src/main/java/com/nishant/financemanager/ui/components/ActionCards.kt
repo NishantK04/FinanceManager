@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -66,38 +68,44 @@ fun ActionItem(
     Row(
         modifier = modifier
             .shadow(8.dp, RoundedCornerShape(16.dp))
-            .clip(RoundedCornerShape(16.dp)) // needed for ripple
-            .background(Color.White)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
             .clickable { onClick() }
-            .padding(16.dp),
+            .padding(horizontal = 12.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         Box(
             modifier = Modifier
-                .size(32.dp)
-                .background(iconBg, CircleShape),
+                .size(28.dp), // reduced
             contentAlignment = Alignment.Center
         ) {
-
-            Icon(
-                if (isIncome)
-                    Icons.Default.ArrowDownward
-                else
-                    Icons.Default.ArrowUpward,
-                contentDescription = null,
-                tint = iconColor
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(iconBg, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    if (isIncome)
+                        Icons.Default.ArrowDownward
+                    else
+                        Icons.Default.ArrowUpward,
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(8.dp)) // reduced spacing
 
         Text(
-            title,
+            text = title,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
+            fontSize = 13.sp,
             maxLines = 1,
-            softWrap = false
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

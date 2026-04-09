@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
@@ -31,7 +32,6 @@ fun TransactionItem(transaction: Transaction) {
         if (isIncome) Color(0xFFE8F5E9)
         else Color(0xFFFFEBEE)
 
-    // category icon mapping
     val icon = when (transaction.category) {
         "Salary" -> R.drawable.salary
         "Freelance" -> R.drawable.freelance
@@ -50,7 +50,10 @@ fun TransactionItem(transaction: Transaction) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 5.dp)
             .shadow(6.dp, RoundedCornerShape(18.dp))
-            .background(Color.White, RoundedCornerShape(18.dp))
+            .background(
+                MaterialTheme.colorScheme.surface,
+                RoundedCornerShape(18.dp)
+            )
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -64,7 +67,7 @@ fun TransactionItem(transaction: Transaction) {
             Icon(
                 painter = painterResource(icon),
                 contentDescription = null,
-                tint = amountColor,
+                tint = Color.Unspecified,
                 modifier = Modifier.size(22.dp)
             )
         }
@@ -88,6 +91,17 @@ fun TransactionItem(transaction: Transaction) {
                 fontSize = 12.sp,
                 color = Color.Gray
             )
+
+            // NOTE TEXT
+            if (transaction.note.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(2.dp))
+
+                Text(
+                    text = transaction.note,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666)
+                )
+            }
         }
 
         Text(

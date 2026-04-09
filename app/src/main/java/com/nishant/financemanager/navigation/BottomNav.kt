@@ -16,7 +16,11 @@ import com.nishant.financemanager.viewmodel.FinanceViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun BottomNav(viewModel: FinanceViewModel) {
+fun BottomNav(
+    viewModel: FinanceViewModel,
+    darkMode: Boolean,
+    onToggleTheme: () -> Unit
+) {
 
     var selected by remember { mutableStateOf(0) }
 
@@ -93,7 +97,7 @@ fun BottomNav(viewModel: FinanceViewModel) {
         ) { screen ->
 
             when (screen) {
-                0 -> HomeScreen(viewModel)
+                0 -> HomeScreen(viewModel, darkMode , onToggleTheme)
                 1 -> CategoryScreen(viewModel)
                 2 -> SummaryScreen(viewModel)
             }

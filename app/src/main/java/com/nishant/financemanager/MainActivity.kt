@@ -1,23 +1,24 @@
 package com.nishant.financemanager
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.room.Room
 import com.nishant.financemanager.data.FinanceDatabase
 import com.nishant.financemanager.navigation.BottomNav
+import com.nishant.financemanager.ui.screens.SplashScreen
 import com.nishant.financemanager.ui.theme.FinanceManagerTheme
+import com.nishant.financemanager.ui.theme.PurpleStart
+import com.nishant.financemanager.ui.theme.ThemePreference
 import com.nishant.financemanager.viewmodel.FinanceViewModel
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -32,10 +33,42 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            val viewModel = FinanceViewModel(db.dao())
+            val view = LocalView.current
 
-            FinanceManagerTheme {
-                BottomNav(viewModel)
+            // SET STATUS BAR COLOR GLOBAL
+            SideEffect {
+                val window = (view.context as Activity).window
+                window.statusBarColor = PurpleStart.toArgb()
+            }
+
+            val viewModel = FinanceViewModel(db.dao())
+            val context = LocalContext.current
+            val prefs = remember { ThemePreference(context) }
+
+            val darkMode by prefs.isDarkMode.collectAsState(initial = false)
+
+            var showSplash by remember { mutableStateOf(true) }
+
+            if (showSplash) {
+
+                SplashScreen(
+                    onFinish = { showSplash = false }
+                )
+
+            } else {
+
+                FinanceManagerTheme(darkTheme = darkMode) {
+
+                    BottomNav(
+                        viewModel = viewModel,
+                        darkMode = darkMode,
+                        onToggleTheme = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                prefs.saveDarkMode(!darkMode)
+                            }
+                        }
+                    )
+                }
             }
         }
     }
