@@ -6,7 +6,7 @@ This app helps users track income, expenses, and view monthly financial summarie
 
 ---
 ##  Screenshots  
-<img src="https://github.com/NishantK04/session-capture/blob/master/home.png" width="250"> <img src="https://github.com/NishantK04/session-capture/blob/master/preview.png" width="250"> <img src="https://github.com/NishantK04/session-capture/blob/master/info_add.png" width="250"> <img src="https://github.com/NishantK04/session-capture/blob/master/search.png" width="250">
+<img src="https://github.com/NishantK04/FinanceManager/blob/master/splash.png" width="250"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/homelight.png" width="250"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/addTD1.png" width="250"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/addInLight2.png"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/categoriesLight.png"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/categoriesLight2.png"> <img src="https://github.com/NishantK04/FinanceManager/blob/master/summaryLight.png">
 
 ---
 ##  Project Structure
