@@ -15,8 +15,10 @@ import androidx.compose.ui.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.nishant.financemanager.R
 import com.nishant.financemanager.data.Transaction
 import com.nishant.financemanager.ui.components.*
 import com.nishant.financemanager.viewmodel.FinanceViewModel
@@ -35,6 +37,8 @@ fun HomeScreen(
     val balance by viewModel.balance.collectAsState(initial = 0.0)
     val income by viewModel.totalIncome.collectAsState(initial = 0.0)
     val expense by viewModel.totalExpense.collectAsState(initial = 0.0)
+
+    var showMonitor by remember { mutableStateOf(false) }
 
     // loading state
     var loading by remember { mutableStateOf(true) }
@@ -150,21 +154,47 @@ fun HomeScreen(
             }
         }
 
-        FloatingActionButton(
-            onClick = { showAdd = true },
-            containerColor = Color(0xFF063770),
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 20.dp, bottom = 115.dp)
-                .scale(fabScale)
+                .padding(end = 20.dp, bottom = 115.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.End
         ) {
-            Icon(Icons.Default.Add, null, tint = Color.White)
+
+            FloatingActionButton(
+                onClick = { showMonitor = true },
+                containerColor = Color(0xFF0C6ACE)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.sheild),
+                    contentDescription = "Monitor",
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Unspecified
+                )
+            }
+
+            // ➕ ADD BUTTON (BOTTOM)
+            FloatingActionButton(
+                onClick = { showAdd = true },
+                containerColor = Color(0xFF7C9EFF),
+                modifier = Modifier.scale(fabScale)
+            ) {
+                Icon(Icons.Default.Add, null, tint = Color.White)
+            }
         }
 
         if (showAdd) {
             AddTransactionScreen(
                 viewModel = viewModel,
                 onBack = { showAdd = false }
+            )
+        }
+
+        if (showMonitor) {
+            SmartMonitorScreen(
+                viewModel = viewModel,
+                onBack = { showMonitor = false }
             )
         }
 
